@@ -10,13 +10,14 @@ import {
   type OnConnect,
 } from "@xyflow/react";
 import { useCallback } from "react";
-import styles from './styles.module.scss'
+import styles from "./styles.module.scss";
 
 import "@xyflow/react/dist/style.css";
 
 import { edgeTypes, initialEdges } from "./edges";
 import { initialNodes, nodeTypes } from "./nodes";
-const HelloWorld = () => {
+import { IHelloWorldProps } from "./IHelloWorldProps";
+const HelloWorld: React.FC<IHelloWorldProps> = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect: OnConnect = useCallback(
@@ -26,8 +27,7 @@ const HelloWorld = () => {
 
   return (
     <>
-      <div>123asdasd</div>
-      <div className={styles['reactFlow-Wrapper']}>
+      <div className={styles["reactFlow-Wrapper"]}>
         <ReactFlow
           nodes={nodes}
           nodeTypes={nodeTypes}

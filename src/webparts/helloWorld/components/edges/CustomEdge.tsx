@@ -26,7 +26,7 @@ export type GetSpecialPathParams = {
 //   } ${targetX} ${targetY}`;
 // };
 
-export default function CustomEdge({
+export default ({
   id,
   sourceX,
   sourceY,
@@ -35,7 +35,7 @@ export default function CustomEdge({
   sourcePosition,
   targetPosition,
   markerEnd,
-}: EdgeProps) {
+}: EdgeProps): ReturnType<React.FC> => {
   const { setEdges } = useReactFlow();
 
   const edgePathParams = {
@@ -48,7 +48,7 @@ export default function CustomEdge({
   };
   const [path, labelX, labelY] = getSmoothStepPath(edgePathParams);
 
-  const onEdgeClick = () => {
+  const onEdgeClick = (): void => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));
   };
 

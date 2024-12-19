@@ -17,20 +17,9 @@ export interface IHelloWorldWebPartProps {
 }
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
-
-  private _isDarkTheme: boolean = false;
-  private _environmentMessage: string = '';
-
   public render(): void {
     const element: React.ReactElement<IHelloWorldProps> = React.createElement(
-      HelloWorld,
-      {
-        description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
-      }
+      HelloWorld
     );
 
     ReactDom.render(element, this.domElement);
@@ -38,7 +27,6 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
 
   protected onInit(): Promise<void> {
     return this._getEnvironmentMessage().then(message => {
-      this._environmentMessage = message;
     });
   }
 
@@ -76,7 +64,6 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       return;
     }
 
-    this._isDarkTheme = !!currentTheme.isInverted;
     const {
       semanticColors
     } = currentTheme;
