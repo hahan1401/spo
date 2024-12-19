@@ -2,6 +2,8 @@ import React from "react";
 import {
   Background,
   Controls,
+  Edge,
+  MarkerType,
   MiniMap,
   ReactFlow,
   addEdge,
@@ -13,15 +15,26 @@ import { useCallback } from "react";
 import styles from "./styles.module.scss";
 
 import "@xyflow/react/dist/style.css";
+import './style.css'
 
 import { edgeTypes, initialEdges } from "./edges";
 import { initialNodes, nodeTypes } from "./nodes";
 import { IHelloWorldProps } from "./IHelloWorldProps";
+
+const edgeOptions = {
+  type: "customEdge",
+  markerEnd: { type: MarkerType.ArrowClosed } as Edge ["markerEnd"],
+};
+
+
 const HelloWorld: React.FC<IHelloWorldProps> = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((edges) => addEdge(connection, edges)),
+    (connection) =>
+      setEdges((edges) =>
+        addEdge({ ...connection, type: "customEdge" }, edges)
+      ),
     [setEdges]
   );
 
@@ -37,6 +50,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = () => {
           }}
           edges={edges}
           edgeTypes={edgeTypes}
+          defaultEdgeOptions={edgeOptions}
           onEdgesChange={(e) => {
             console.log("edge", e);
             onEdgesChange(e);

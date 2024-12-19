@@ -3,7 +3,7 @@ import CustomEdge from './CustomEdge';
 
 export const initialEdges: Edge[] = [
   {
-    id: 'a->b', source: 'a', target: 'b', sourceHandle: '-right_a', targetHandle: '-left_b', animated: true,
+    id: 'a->b', source: 'a', target: 'b', sourceHandle: '-right_a', targetHandle: '-left_b', animated: true, type: 'customEdge'
   },
 ];
 
