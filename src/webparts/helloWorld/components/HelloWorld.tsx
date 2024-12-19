@@ -10,6 +10,7 @@ import {
   type OnConnect,
 } from "@xyflow/react";
 import { useCallback } from "react";
+import styles from './styles.module.scss'
 
 import "@xyflow/react/dist/style.css";
 
@@ -25,30 +26,32 @@ const HelloWorld = () => {
 
   return (
     <>
-    <div>123123</div>
-      <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        onNodesChange={(e) => {
-          console.log("node", e);
-          onNodesChange(e);
-        }}
-        edges={edges}
-        edgeTypes={edgeTypes}
-        onEdgesChange={(e) => {
-          console.log("edge", e);
-          onEdgesChange(e);
-        }}
-        onConnect={(e) => {
-          console.log("connect", e);
-          onConnect(e);
-        }}
-        fitView
-      >
-        <Background />
-        <MiniMap />
-        <Controls />
-      </ReactFlow>
+      <div>123asdasd</div>
+      <div className={styles['reactFlow-Wrapper']}>
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          onNodesChange={(e) => {
+            console.log("node", e);
+            onNodesChange(e);
+          }}
+          edges={edges}
+          edgeTypes={edgeTypes}
+          onEdgesChange={(e) => {
+            console.log("edge", e);
+            onEdgesChange(e);
+          }}
+          onConnect={(e) => {
+            console.log("connect", e);
+            onConnect(e);
+          }}
+          fitView
+        >
+          <Background />
+          <MiniMap />
+          <Controls />
+        </ReactFlow>
+      </div>
     </>
   );
 };

@@ -1,14 +1,12 @@
 import {
   ContextualMenu,
   IDragOptions,
-  Modal,
-  Stack,
-  Toggle
+  Modal
 } from '@fluentui/react';
 import { useBoolean, useId } from '@fluentui/react-hooks';
 import { DefaultButton, IconButton } from '@fluentui/react/lib/Button';
 import * as React from 'react';
-import { cancelIcon, contentStyles, iconButtonStyles, stackProps } from './helper';
+import { cancelIcon, contentStyles, iconButtonStyles } from './helper';
 
 export const ModalBasicExample: React.FunctionComponent = () => {
   const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
@@ -32,16 +30,6 @@ export const ModalBasicExample: React.FunctionComponent = () => {
 
   return (
     <div>
-      <Stack {...stackProps}>
-        <Toggle label="Is draggable" inlineLabel onChange={toggleIsDraggable} checked={isDraggable} />
-        <Toggle
-          label="Keep in bounds"
-          inlineLabel
-          onChange={toggleKeepInBounds}
-          checked={keepInBounds}
-          disabled={!isDraggable}
-        />
-      </Stack>
 
       <DefaultButton onClick={showModal} text="Open Modal" />
       <Modal

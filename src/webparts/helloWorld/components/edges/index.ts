@@ -1,11 +1,13 @@
-import type { Edge, EdgeTypes } from '@xyflow/react';
+import { type Edge, type EdgeTypes } from '@xyflow/react';
+import CustomEdge from './CustomEdge';
 
 export const initialEdges: Edge[] = [
-    // { id: 'a->b', source: 'a', target: 'b', animated: true },
-    // { id: 'b->c', source: 'b', target: 'c' },
-    // { id: 'c->d', source: 'c', target: 'd', animated: true },
+  {
+    id: 'a->b', source: 'a', target: 'b', sourceHandle: '-right_a', targetHandle: '-left_b', animated: true,
+  },
 ];
 
 export const edgeTypes = {
-    // Add your custom edge types here!
+  customEdge: CustomEdge,
+  // Add your custom edge types here!
 } as EdgeTypes;
