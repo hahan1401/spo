@@ -1,70 +1,81 @@
 import {
-  Background,
-  Controls,
-  Edge,
-  MarkerType,
-  MiniMap,
-  ReactFlow,
-  addEdge,
-  useEdgesState,
-  useNodesState,
-  type OnConnect,
-} from "@xyflow/react";
-import React, { useCallback } from "react";
-import styles from "./styles.module.scss";
+	Background,
+	Controls,
+	Edge,
+	MarkerType,
+	MiniMap,
+	ReactFlowProvider,
+	addEdge,
+	useEdgesState,
+	useNodesState,
+	type OnConnect,
+} from '@xyflow/react';
+import React, { useCallback } from 'react';
+import styles from './styles.module.scss';
 
-import "@xyflow/react/dist/style.css";
-import "./style.css";
+import '@xyflow/react/dist/style.css';
+import './style.css';
 
-import { edgeTypes, initialEdges } from "./edges";
-import { IHelloWorldProps } from "./IHelloWorldProps";
-import { initialNodes, nodeTypes } from "./nodes";
+import { edgeTypes, initialEdges } from './edges';
+import { IHelloWorldProps } from './IHelloWorldProps';
+import { initialNodes, nodeTypes } from './nodes';
+import ReactFlowProviderCustom from './ReactFlowProviderCustom';
+import Sidebar from './Sidebar';
+import { DnDProvider } from './Sidebar/DnDContext';
 
 const edgeOptions = {
-  type: "customEdge",
-  markerEnd: { type: MarkerType.ArrowClosed } as Edge["markerEnd"],
+	type: 'customEdge',
+	markerEnd: { type: MarkerType.ArrowClosed } as Edge['markerEnd'],
 };
 
 const HelloWorld: React.FC<IHelloWorldProps> = () => {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const onConnect: OnConnect = useCallback(
-    (connection) =>
-      setEdges((edges) =>
-        addEdge({ ...connection, type: "customEdge" }, edges),
-      ),
-    [setEdges],
-  );
-  return (
-    <>
-      <div className={styles["reactFlow-Wrapper"]}>
-        <ReactFlow
-          nodes={nodes}
-          nodeTypes={nodeTypes}
-          onNodesChange={(e) => {
-            console.log("node", e);
-            onNodesChange(e);
-          }}
-          edges={edges}
-          edgeTypes={edgeTypes}
-          defaultEdgeOptions={edgeOptions}
-          onEdgesChange={(e) => {
-            console.log("edge", e);
-            onEdgesChange(e);
-          }}
-          onConnect={(e) => {
-            console.log("connect", e);
-            onConnect(e);
-          }}
-          fitView
-        >
-          <Background />
-          <MiniMap />
-          <Controls />
-        </ReactFlow>
-      </div>
-    </>
-  );
+	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+	const onConnect: OnConnect = useCallback(
+		(connection) => setEdges((edges) => addEdge({ ...connection, type: 'customEdge' }, edges)),
+		[setEdges],
+	);
+
+	const onDragOver = useCallback((event) => {
+		event.preventDefault();
+		event.dataTransfer.dropEffect = 'move';
+	}, []);
+
+	return (
+		<div className={styles['reactFlow-Wrapper']}>
+			<ReactFlowProvider>
+				<DnDProvider>
+					<ReactFlowProviderCustom
+						nodes={nodes}
+						nodeTypes={nodeTypes}
+						onNodesChange={(e) => {
+							onNodesChange(e);
+						}}
+						edges={edges}
+						edgeTypes={edgeTypes}
+						defaultEdgeOptions={edgeOptions}
+						onEdgesChange={(e) => {
+							onEdgesChange(e);
+						}}
+						onConnect={(e) => {
+							onConnect(e);
+						}}
+						fitView
+						onDragOver={onDragOver}
+						setNodes={setNodes}
+						onNodesDelete={(nodes) => {
+							console.log('nodes', nodes);
+						}}
+					>
+						<Background />
+						<MiniMap />
+						<Controls />
+					</ReactFlowProviderCustom>
+					<Sidebar />
+				</DnDProvider>
+			</ReactFlowProvider>
+		</div>
+	);
 };
 
 export default HelloWorld;

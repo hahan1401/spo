@@ -1,5 +1,27 @@
-@import '~@fluentui/react/dist/sass/References.scss';
+@import "~@fluentui/react/dist/sass/References.scss";
 
 .reactFlow-Wrapper {
-	height: 500px;
+  height: 500px;
+  display: flex;
+
+  :global {
+    .side-bar-custom {
+      border-right: 1px solid #eee;
+      padding: 15px 10px;
+      font-size: 12px;
+      background: #fcfcfc;
+
+      .dndnode {
+        height: 20px;
+        padding: 4px;
+        border: 1px solid #1a192b;
+        border-radius: 2px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: grab;
+      }
+    }
+  }
 }
