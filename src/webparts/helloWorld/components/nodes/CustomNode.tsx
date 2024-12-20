@@ -1,16 +1,15 @@
 import * as RF from '@xyflow/react';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Modal } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
+import DetailModal from '../Modal/DetailModal';
 import { ModalBasicExample } from '../Modal/ModalBasicExample';
-import { type CustomNode as TCustomNode } from './types';
+import { AppNode, type CustomNode as TCustomNode } from './types';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
 export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
-	const { deleteElements, getNode, updateNode } = RF.useReactFlow();
-	const [nodeName, setNodeName] = useState(getNode(id)?.data.label as string);
+	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
 	return (
 		<>
@@ -20,14 +19,12 @@ export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<
 					<button
 						onClick={() => {
 							showModal();
-							console.log('edit clicked', getNode(id));
 						}}
 					>
 						Edit
 					</button>
 					<button
 						onClick={() => {
-							console.log('id', id);
 							void deleteElements({ nodes: [{ id: id }] });
 						}}
 					>
@@ -66,29 +63,12 @@ export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<
 					id={`-left_${id}`}
 				/>
 			</div>
-			<Modal
-				isOpen={isModalOpen}
-				onDismiss={hideModal}
-				isBlocking={false}
-			>
-				<label htmlFor='nodeName'>Node Name:</label>
-				<input
-					type='text'
-					name='nodeName'
-					value={nodeName}
-					onChange={(e) => {
-						setNodeName(e.target.value);
-					}}
-				/>
-				<button
-					onClick={() => {
-						updateNode(id, { data: { label: nodeName } });
-						hideModal();
-					}}
-				>
-					save
-				</button>
-			</Modal>
+
+			<DetailModal
+				hideModal={hideModal}
+				isModalOpen={isModalOpen}
+				node={getNode(id)}
+			/>
 		</>
 	);
 };

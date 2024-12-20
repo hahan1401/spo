@@ -22,6 +22,7 @@ import { initialNodes, nodeTypes } from './nodes';
 import ReactFlowProviderCustom from './ReactFlowProviderCustom';
 import Sidebar from './Sidebar';
 import { DnDProvider } from './Sidebar/DnDContext';
+import SidePanel from './SidePanel';
 
 const edgeOptions = {
 	type: 'customEdge',
@@ -63,13 +64,12 @@ const HelloWorld: React.FC<IHelloWorldProps> = () => {
 						fitView
 						onDragOver={onDragOver}
 						setNodes={setNodes}
-						onNodesDelete={(nodes) => {
-							console.log('nodes', nodes);
-						}}
 					>
 						<Background />
 						<MiniMap />
 						<Controls />
+
+						<SidePanel />
 					</ReactFlowProviderCustom>
 					<Sidebar />
 				</DnDProvider>

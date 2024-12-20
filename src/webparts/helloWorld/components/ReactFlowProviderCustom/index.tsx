@@ -3,9 +3,6 @@ import React, { useCallback } from 'react';
 import { AppNode } from '../nodes/types';
 import { useDnD } from '../Sidebar/DnDContext';
 
-let id = 0;
-export const getId = () => `dndnode_${id++}`;
-
 export default (
 	props: ReactFlowProps<AppNode, Edge> & {
 		setNodes: React.Dispatch<React.SetStateAction<AppNode[]>>;
@@ -13,7 +10,7 @@ export default (
 ) => {
 	const { setNodes, ...rest } = props;
 	const [type] = useDnD();
-	const { screenToFlowPosition } = useReactFlow();
+	const { screenToFlowPosition, getNodes } = useReactFlow();
 	// you can access the internal state here
 
 	const onDrop = useCallback(
@@ -32,7 +29,7 @@ export default (
 				y: event.clientY,
 			});
 			const newNode = {
-				id: getId(),
+				id: `${type}-${getNodes().length + 1}`,
 				type,
 				position,
 				data: { label: `${type} node` },

@@ -16,9 +16,6 @@ const Sidebar = () => {
 			<div
 				className='dndnode'
 				onDragStart={(event) => onDragStart(event, 'custom-node')}
-				onDragExit={(e) => {
-					console.log('12312312', e);
-				}}
 				draggable
 			>
 				Custom Node
