@@ -1,10 +1,12 @@
-import React from "react";
 import * as RF from "@xyflow/react";
+import React from "react";
 
-import { type CustomNode as TCustomNode } from "./types";
 import { ModalBasicExample } from "../Modal/ModalBasicExample";
+import { type CustomNode as TCustomNode } from "./types";
 
-const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
+const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => (
+  <RF.Handle {...props} />
+);
 
 export const CustomNode = ({
   data,

@@ -1,2 +1,1 @@
-export interface IHelloWorldProps {
-}
+export interface IHelloWorldProps {}

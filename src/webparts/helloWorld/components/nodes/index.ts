@@ -3,48 +3,58 @@ import type { NodeTypes } from '@xyflow/react';
 import { CustomNode } from './CustomNode';
 import { AppNode } from './types';
 
-export const initialNodes: AppNode[] = [
-  {
-    id: 'group-parent',
-    type: 'group',
-    position: { x: 0, y: 0 },
-    data: { label: '234sdgf' } as unknown as Record<string, never>,
-    style: { width: 1200, height: 500 },
-  },
-  {
-    id: 'a', type: 'custom-node', position: { x: 100, y: 100 }, data: {
-      label: 'a', onClick: (id) => {
-        console.log(`Node-${id} is clicked!!`)
-      }
-    },
-    parentId: 'group-parent',
-    extent: 'parent',
-  },
-  {
-    id: 'b',
-    type: 'custom-node',
-    position: { x: 400, y: 100 },
-    data: { label: 'b' },
-    parentId: 'group-parent',
-    extent: 'parent',
-  },
-  {
-    id: 'c',
-    type: 'custom-node', position: { x: 700, y: 100 }, data: { label: 'c' },
-    parentId: 'group-parent',
-    extent: 'parent',
-  },
-  {
-    id: 'd',
-    type: 'custom-node',
-    position: { x: 1000, y: 100 },
-    data: { label: 'd' },
-    parentId: 'group-parent',
-    extent: 'parent',
-  },
-];
+export const generateSwimlane = (number: number): AppNode[][] => {
+	const arr = Array(3).fill(0);
+	return arr.map<AppNode[]>((_, index) => {
+		return [
+			{
+				id: `swimlane-${index + 1}`,
+				type: 'group',
+				position: { x: 0 + 300 * index, y: 0 },
+				data: {} as unknown as Record<string, never>,
+				style: { width: 200, height: 700 },
+			},
+			{
+				id: `swimlane-${index + 1}-item-1`,
+				type: 'custom-node',
+				position: { x: 10, y: 40 },
+				data: {
+					label: 'a',
+				},
+				parentId: `swimlane-${index + 1}`,
+				extent: 'parent',
+			},
+			{
+				id: `swimlane-${index + 1}-item-2`,
+				type: 'custom-node',
+				position: { x: 10, y: 140 },
+				data: { label: 'b' },
+				parentId: `swimlane-${index + 1}`,
+				extent: 'parent',
+			},
+			{
+				id: `swimlane-${index + 1}-item-3`,
+				type: 'custom-node',
+				position: { x: 10, y: 240 },
+				data: { label: 'c' },
+				parentId: `swimlane-${index + 1}`,
+				extent: 'parent',
+			},
+			{
+				id: `swimlane-${index + 1}-item-4`,
+				type: 'custom-node',
+				position: { x: 10, y: 340 },
+				data: { label: 'd' },
+				parentId: `swimlane-${index + 1}`,
+				extent: 'parent',
+			},
+		];
+	});
+};
+
+export const initialNodes: AppNode[] = [...generateSwimlane(3).flat(2)];
 
 export const nodeTypes = {
-  'custom-node': CustomNode,
-  // Add any of your custom nodes here!
+	'custom-node': CustomNode,
+	// Add any of your custom nodes here!
 } as NodeTypes;

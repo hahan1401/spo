@@ -1,0 +1,5 @@
+*.json
+/config
+gulpfile.js
+.*ignore*
+*.scss.d.ts
