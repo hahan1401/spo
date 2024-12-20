@@ -10,7 +10,8 @@
     "build": "gulp bundle",
     "clean": "gulp clean",
     "test": "gulp test",
-    "serve": "gulp serve"
+    "serve": "gulp serve",
+    "f-serve": "gulp bundle --custom-serve --max_old_space_size=4096 && fast-serve"
   },
   "dependencies": {
     "@fluentui/react": "^8.106.4",
@@ -42,6 +43,7 @@
     "postcss": "^8.4.49",
     "postcss-discard-comments": "^7.0.3",
     "prettier": "^3.4.2",
+    "spfx-fast-serve-helpers": "^1.20.2",
     "typescript": "^5.7.2"
   }
 }

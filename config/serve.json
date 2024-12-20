@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
-  "port": 4322,
+  "port": 4321,
   "https": true,
-  "initialPage": "https://harryngo.sharepoint.com?debug=true&noredir=true&debugManifestsFile=https://localhost:4322/temp/manifests.js"
+  "initialPage": "https://harryngo.sharepoint.com?debug=true&noredir=true&debugManifestsFile=https://localhost:4321/temp/manifests.js"
 }

@@ -26,5 +26,11 @@ build.configureWebpack.mergeConfig({
   },
 });
 
+
+/* #region fast-serve */
+const { addFastServe } = require("spfx-fast-serve-helpers");
+addFastServe(build);
+/* #endregion */
+
 // Initialize build process
 build.initialize(require('gulp'));
