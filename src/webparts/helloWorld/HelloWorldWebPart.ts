@@ -1,9 +1,9 @@
-import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import { Version } from '@microsoft/sp-core-library';
 import { type IPropertyPaneConfiguration, PropertyPaneTextField } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { IReadonlyTheme } from '@microsoft/sp-component-base';
+import * as React from 'react';
+import * as ReactDom from 'react-dom';
 
 import * as strings from 'HelloWorldWebPartStrings';
 import HelloWorld from './components/HelloWorld';
@@ -21,7 +21,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
 	}
 
 	protected onInit(): Promise<void> {
-		return this._getEnvironmentMessage().then((message) => {});
+		return this._getEnvironmentMessage().then(() => {});
 	}
 
 	private _getEnvironmentMessage(): Promise<string> {

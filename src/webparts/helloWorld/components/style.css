@@ -1,3 +1,7 @@
+.react-flow__node.parent {
+	background-color: transparent;
+}
+
 .button-edge__label {
 	position: absolute;
 	pointer-events: all;
@@ -9,7 +13,7 @@
 	width: 30px;
 	height: 30px;
 	border: 5px solid #f7f9fb;
-	color: var(--xy-edge-label-color-default);
+	color: var(--xy-handle-background-color-default);
 	background-color: #f3f3f4;
 	cursor: pointer;
 	border-radius: 50%;
@@ -18,6 +22,7 @@
 }
 
 .button-edge__button:hover {
-	background-color: var(--xy-theme-hover);
-	color: #ffffff;
+	background-color: var(--xy-handle-background-color-default);
+	opacity: .8;
+	color: #fff;
 }

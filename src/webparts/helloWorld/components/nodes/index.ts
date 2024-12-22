@@ -11,7 +11,7 @@ export const generateSwimlane = (number: number): AppNode[][] => {
 				id: `swimlane-${index + 1}`,
 				type: 'labeled-group',
 				position: { x: 0, y: 0 + 150 * index },
-				data: { label: `swimlane-${index + 1}` },
+				data: { label: 'qweqwe-qwe' },
 				style: { width: 1200, height: 100 },
 			},
 			{
@@ -52,7 +52,7 @@ export const generateSwimlane = (number: number): AppNode[][] => {
 	});
 };
 
-export const initialNodes: AppNode[] = [...generateSwimlane(5).flat(2)];
+export const initialNodes: AppNode[] = [...generateSwimlane(1).flat(2)];
 
 export const nodeTypes = {
 	'custom-node': CustomNode,
