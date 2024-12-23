@@ -14,6 +14,10 @@ export const LabeledGroup = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnTyp
 	return (
 		<>
 			<div className='react-flow__node-default'>
+				<RF.NodeResizer
+					minWidth={100}
+					minHeight={30}
+				/>
 				<RF.NodeToolbar>
 					<DefaultButton
 						onClick={() => {

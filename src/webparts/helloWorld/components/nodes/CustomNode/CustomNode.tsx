@@ -16,6 +16,10 @@ export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<
 		<>
 			{/* We add this class to use the same styles as React Flow's default nodes. */}
 			<div className='react-flow__node-default'>
+				<RF.NodeResizer
+					minWidth={100}
+					minHeight={30}
+				/>
 				<RF.NodeToolbar>
 					<DefaultButton
 						onClick={() => {

@@ -4,8 +4,14 @@
 	box-sizing: border-box;
 }
 
+.react-flow__node-custom-node {
+	border: var(--xy-node-border, var(--xy-node-border-default));
+}
+
 .react-flow__node-custom-node .react-flow__node-default {
 	background-color: inherit;
+	border: none;
+	width: 100%;
 }
 
 .button-edge__label {
