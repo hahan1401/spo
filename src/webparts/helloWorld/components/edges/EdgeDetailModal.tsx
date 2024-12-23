@@ -20,6 +20,11 @@ const EdgeDetailModal = ({
 				isOpen={isModalOpen}
 				onDismiss={hideModal}
 				isBlocking={false}
+				styles={{
+					main: {
+						padding: 10,
+					},
+				}}
 			>
 				<label htmlFor='edgeLabel'>Label</label>
 				<input

@@ -49,6 +49,11 @@ const NodeGroupModal = ({
 				isOpen={isModalOpen}
 				onDismiss={onCloseModal}
 				isBlocking={false}
+				styles={{
+					main: {
+						padding: 10,
+					},
+				}}
 			>
 				<label htmlFor='name'>Name:</label>
 				<input

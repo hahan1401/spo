@@ -4,6 +4,10 @@
 	box-sizing: border-box;
 }
 
+.react-flow__node-custom-node .react-flow__node-default {
+	background-color: inherit;
+}
+
 .react-flow__node.parent {
 	/* background-color: transparent; */
 }
