@@ -1,4 +1,4 @@
-import { Modal } from '@fluentui/react';
+import { Modal, PrimaryButton } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import { AppNode } from '../nodes/types';
@@ -36,14 +36,14 @@ const EdgeDetailModal = ({
 					}}
 				/>
 
-				<button
+				<PrimaryButton
 					onClick={() => {
 						updateEdge(edgeId, { label });
 						hideModal?.();
 					}}
 				>
 					save
-				</button>
+				</PrimaryButton>
 			</Modal>
 		</>
 	);

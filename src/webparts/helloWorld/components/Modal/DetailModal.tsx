@@ -1,6 +1,6 @@
-import { ColorPicker, Dropdown, IColorPickerStyles, Modal } from '@fluentui/react';
+import { ColorPicker, Dropdown, IColorPickerStyles, Modal, PrimaryButton } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
 	DEFAULT_POSITION_X,
 	DEFAULT_POSITION_Y,
@@ -37,7 +37,6 @@ const DetailModal = ({
 	isModalOpen?: boolean;
 	hideModal?: () => void;
 }) => {
-	console.log('node', node);
 	const { getNodes, addNodes, updateNode } = useReactFlow<AppNode>();
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
@@ -52,8 +51,7 @@ const DetailModal = ({
 		setTextColor('#000');
 	};
 
-	const addNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
+	const addNode = () => {
 		let nodesInGroup = getNodes().filter((item) => item.parentId === nodeGroup);
 
 		const positionX = nodeGroup
@@ -171,8 +169,8 @@ const DetailModal = ({
 				/>
 			</div>
 
-			<button
-				onClick={(e) => {
+			<PrimaryButton
+				onClick={() => {
 					if (node?.id) {
 						updateNode(node.id, {
 							data: { label: nodeName },
@@ -183,13 +181,13 @@ const DetailModal = ({
 							},
 						});
 					} else {
-						addNode(e);
+						addNode();
 					}
 					onCloseModal();
 				}}
 			>
 				save
-			</button>
+			</PrimaryButton>
 		</Modal>
 	);
 };

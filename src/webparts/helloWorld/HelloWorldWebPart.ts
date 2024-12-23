@@ -8,6 +8,7 @@ import * as ReactDom from 'react-dom';
 import * as strings from 'HelloWorldWebPartStrings';
 import HelloWorld from './components/HelloWorld';
 import { IHelloWorldProps } from './components/IHelloWorldProps';
+import { getSP } from './pnpjsConfig';
 
 export interface IHelloWorldWebPartProps {
 	description: string;
@@ -15,13 +16,16 @@ export interface IHelloWorldWebPartProps {
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 	public render(): void {
-		const element: React.ReactElement<IHelloWorldProps> = React.createElement(HelloWorld);
+		const element: React.ReactElement<IHelloWorldProps> = React.createElement(HelloWorld, {
+			context: this.context,
+		});
 
 		ReactDom.render(element, this.domElement);
 	}
 
-	protected onInit(): Promise<void> {
-		return this._getEnvironmentMessage().then(() => {});
+	protected async onInit(): Promise<void> {
+		getSP(this.context);
+		await this._getEnvironmentMessage();
 	}
 
 	private _getEnvironmentMessage(): Promise<string> {

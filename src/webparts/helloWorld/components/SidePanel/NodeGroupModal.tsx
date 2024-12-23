@@ -1,6 +1,6 @@
-import { Modal } from '@fluentui/react';
+import { Modal, PrimaryButton } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DEFAULT_POSITION_X, DEFAULT_POSITION_Y, NODE_GAP, NODE_GROUP_MIN_HEIGHT } from '../../../../Contants';
 import { hashString } from '../../../../Utils';
 import { AppNode } from '../nodes/types';
@@ -22,8 +22,7 @@ const NodeGroupModal = ({
 		hideModal?.();
 	};
 
-	const addNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
+	const addNode = () => {
 		const postionY =
 			Math.max(
 				...getNodes()
@@ -65,13 +64,13 @@ const NodeGroupModal = ({
 					}}
 				/>
 
-				<button
-					onClick={(e) => {
-						addNode(e);
+				<PrimaryButton
+					onClick={() => {
+						addNode();
 					}}
 				>
 					save
-				</button>
+				</PrimaryButton>
 			</Modal>
 		</>
 	);

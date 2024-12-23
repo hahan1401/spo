@@ -1,6 +1,7 @@
 import * as RF from '@xyflow/react';
 import React from 'react';
 
+import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import DetailModal from '../Modal/DetailModal';
 import { ModalBasicExample } from '../Modal/ModalBasicExample';
@@ -16,20 +17,20 @@ export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<
 			{/* We add this class to use the same styles as React Flow's default nodes. */}
 			<div className='react-flow__node-default'>
 				<RF.NodeToolbar>
-					<button
+					<DefaultButton
 						onClick={() => {
 							showModal();
 						}}
 					>
 						Edit
-					</button>
-					<button
+					</DefaultButton>
+					<DefaultButton
 						onClick={() => {
 							void deleteElements({ nodes: [{ id: id }] });
 						}}
 					>
 						Delete
-					</button>
+					</DefaultButton>
 				</RF.NodeToolbar>
 				{data.label && (
 					<div

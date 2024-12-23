@@ -1,3 +1,4 @@
+import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import { Panel } from '@xyflow/react';
 import React from 'react';
@@ -10,20 +11,20 @@ const SidePanel: React.FC = () => {
 	return (
 		<>
 			<Panel position='top-left'>
-				<button
+				<DefaultButton
 					onClick={() => {
 						showModal();
 					}}
 				>
 					Create Node
-				</button>
-				<button
+				</DefaultButton>
+				<DefaultButton
 					onClick={() => {
 						showGroupModal();
 					}}
 				>
 					Create Node Group
-				</button>
+				</DefaultButton>
 			</Panel>
 
 			<DetailModal
