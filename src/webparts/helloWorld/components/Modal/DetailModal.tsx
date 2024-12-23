@@ -1,7 +1,17 @@
 import { Dropdown, Modal } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
 import React, { useState } from 'react';
+import {
+	DEFAULT_POSITION_X,
+	DEFAULT_POSITION_Y,
+	NODE_GAP,
+	NODE_GROUP_MIN_HEIGHT,
+	NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
+	NODE_MIN_HEIGHT,
+	NODE_MIN_WIDTH,
+} from '../../../../Contants';
 import { NODE_TYPE } from '../../../../types/common';
+import { hashString } from '../../../../Utils';
 import { AppNode } from '../nodes/types';
 
 const getNodeGroupOptions = (nodes: AppNode[]) =>
@@ -22,15 +32,63 @@ const DetailModal = ({
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
 
+	const onCloseModal = () => {
+		setNodeName('');
+		setNodeGroup('');
+		hideModal?.();
+	};
+
 	const addNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.preventDefault();
+		let nodesInGroup = getNodes().filter((item) => item.parentId === nodeGroup);
+
+		const positionX = nodeGroup
+			? nodesInGroup.reduce((prevValue, current) => {
+					return prevValue + (current.measured?.width ?? 0) + NODE_GAP;
+				}, NODE_GAP)
+			: DEFAULT_POSITION_X;
+
+		const postionY = nodeGroup
+			? (NODE_GROUP_MIN_HEIGHT - NODE_MIN_HEIGHT) / 2
+			: Math.max(
+					...getNodes()
+						.filter((item) => !item.parentId)
+						.map((item) => item.position.y + (item.measured?.height ?? 0)),
+					DEFAULT_POSITION_Y,
+				) + NODE_GAP;
+
 		const newNode = {
-			id: `${'custom-node'}-${getNodes().length + 1}`,
+			id: hashString(nodeName),
 			type: 'custom-node',
-			position: { x: 0, y: 0 },
+			position: {
+				x: positionX,
+				y: postionY,
+			},
+			measured: { height: NODE_MIN_HEIGHT, width: NODE_MIN_WIDTH },
 			data: { label: nodeName },
 			...(nodeGroup ? { extent: 'parent', parentId: nodeGroup } : {}),
 		} as AppNode;
+		if (nodeGroup) {
+			nodesInGroup = [...nodesInGroup, newNode];
+			updateNode(nodeGroup, {
+				measured: {
+					width: nodesInGroup.reduce((prevValue, current) => {
+						return prevValue + (current.measured?.width ?? 0);
+					}, NODE_GAP),
+					height:
+						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
+						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
+				},
+				style: {
+					minWidth: nodesInGroup.reduce((prevValue, current) => {
+						return prevValue + (current.measured?.width ?? 0) + NODE_GAP;
+					}, NODE_GAP),
+					minHeight:
+						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
+						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
+				},
+			});
+		}
 		addNodes([newNode]);
 	};
 
@@ -38,7 +96,7 @@ const DetailModal = ({
 		<>
 			<Modal
 				isOpen={isModalOpen}
-				onDismiss={hideModal}
+				onDismiss={onCloseModal}
 				isBlocking={false}
 			>
 				<label htmlFor='nodeName'>Node Name:</label>
@@ -68,7 +126,7 @@ const DetailModal = ({
 						} else {
 							addNode(e);
 						}
-						hideModal?.();
+						onCloseModal();
 					}}
 				>
 					save

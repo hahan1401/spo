@@ -42,6 +42,8 @@ const HelloWorld: React.FC<IHelloWorldProps> = () => {
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
 
+	console.log('nodes', nodes);
+
 	return (
 		<div className={styles['reactFlow-Wrapper']}>
 			<ReactFlowProvider>
