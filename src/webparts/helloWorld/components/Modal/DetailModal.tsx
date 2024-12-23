@@ -18,7 +18,6 @@ const DetailModal = ({
 	isModalOpen?: boolean;
 	hideModal?: () => void;
 }) => {
-	// const [type] = useDnD();
 	const { getNodes, addNodes, updateNode } = useReactFlow<AppNode>();
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
@@ -53,8 +52,8 @@ const DetailModal = ({
 				/>
 
 				<Dropdown
-					placeholder='Select node type'
-					label='Select node type'
+					placeholder='Select group'
+					label='Select group'
 					options={getNodeGroupOptions(getNodes())}
 					onChange={(_, option) => {
 						setNodeGroup(option?.key?.toString() ?? '');

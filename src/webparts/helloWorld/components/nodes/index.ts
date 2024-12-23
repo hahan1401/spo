@@ -52,7 +52,7 @@ export const generateSwimlane = (number: number): AppNode[][] => {
 	});
 };
 
-export const initialNodes: AppNode[] = [...generateSwimlane(1).flat(2)];
+export const initialNodes: AppNode[] = [...generateSwimlane(0).flat(2)];
 
 export const nodeTypes = {
 	'custom-node': CustomNode,

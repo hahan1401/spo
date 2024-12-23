@@ -1,23 +1,13 @@
-import {
-	CommandBarButton,
-	DirectionalHint,
-	IButtonStyles,
-	IOverflowSetItemProps,
-	OverflowSet,
-	TooltipHost,
-} from '@fluentui/react';
-
-const onRenderItemStyles = {
-	root: { padding: '10px' },
-};
+import { CommandBarButton, IButtonStyles, OverflowSet } from '@fluentui/react';
 
 const onRenderOverflowButton = (overflowItems: any[] | undefined): JSX.Element => {
 	const buttonStyles: Partial<IButtonStyles> = {
 		root: {
 			minWidth: 0,
-			padding: '0 4px',
+			padding: 0,
 			alignSelf: 'stretch',
 			height: 'auto',
+			borderRadius: '50%',
 		},
 	};
 	return (
@@ -30,23 +20,13 @@ const onRenderOverflowButton = (overflowItems: any[] | undefined): JSX.Element =
 	);
 };
 
-const onRenderItem = (item: IOverflowSetItemProps): JSX.Element => {
-	return (
-		<TooltipHost
-			content={item.title}
-			directionalHint={DirectionalHint.rightCenter}
-		>
-			<CommandBarButton
-				aria-label={item.name}
-				styles={onRenderItemStyles}
-				iconProps={{ iconName: item.icon }}
-				onClick={item.onClick}
-			/>
-		</TooltipHost>
-	);
-};
-
-export const OverflowSetCustomExample = ({ onDisconnectNode }: { onDisconnectNode: () => void }) => (
+export const OverflowSetCustomExample = ({
+	onDisconnectNode,
+	showModal,
+}: {
+	onDisconnectNode: () => void;
+	showModal: () => void;
+}) => (
 	<OverflowSet
 		aria-label='Custom Example'
 		overflowItems={[
@@ -60,9 +40,10 @@ export const OverflowSetCustomExample = ({ onDisconnectNode }: { onDisconnectNod
 				key: 'label',
 				name: 'Label',
 				iconProps: { iconName: 'Edit' },
+				onClick: showModal,
 			},
 		]}
 		onRenderOverflowButton={onRenderOverflowButton}
-		onRenderItem={onRenderItem}
+		onRenderItem={() => undefined}
 	/>
 );
