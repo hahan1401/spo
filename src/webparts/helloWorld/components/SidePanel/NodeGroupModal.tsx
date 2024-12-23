@@ -1,7 +1,12 @@
 import { Modal, PrimaryButton } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
-import { DEFAULT_POSITION_X, DEFAULT_POSITION_Y, NODE_GAP, NODE_GROUP_MIN_HEIGHT } from '../../../../Contants';
+import {
+	DEFAULT_POSITION_X,
+	DEFAULT_POSITION_Y,
+	NODE_GROUP_MIN_HEIGHT,
+	VERTICAL_NODE_GAP,
+} from '../../../../Constants';
 import { hashString } from '../../../../Utils';
 import { AppNode } from '../nodes/types';
 
@@ -29,7 +34,7 @@ const NodeGroupModal = ({
 					.filter((item) => !item.parentId)
 					.map((item) => item.position.y + (item.measured?.height ?? 0)),
 				DEFAULT_POSITION_Y,
-			) + NODE_GAP;
+			) + VERTICAL_NODE_GAP;
 
 		const newNode = {
 			id: hashString(name),

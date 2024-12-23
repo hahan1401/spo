@@ -93,6 +93,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 				.update({ Edges: JSON.stringify(edges), Nodes: JSON.stringify(nodes) });
 		}
 	};
+	console.log('nodes', nodes);
 
 	useEffect(() => {
 		void getWebpartContent();
@@ -106,14 +107,12 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 						nodes={nodes}
 						nodeTypes={nodeTypes}
 						onNodesChange={(e) => {
-							console.log('123');
 							onNodesChange(e);
 						}}
 						edges={edges}
 						edgeTypes={edgeTypes}
 						defaultEdgeOptions={edgeOptions}
 						onEdgesChange={(e) => {
-							console.log('asd');
 							onEdgesChange(e);
 						}}
 						onConnect={(e) => {

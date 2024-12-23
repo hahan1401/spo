@@ -16,7 +16,7 @@
 	position: absolute;
 	pointer-events: all;
 	transform-origin: center;
-	z-index: 9999;
+	z-index: 1001;
 }
 
 .button-edge__button {
@@ -35,4 +35,8 @@
 	background-color: var(--xy-handle-background-color-default);
 	opacity: .8;
 	color: #fff;
+}
+
+svg:has(.custom-edge) {
+	z-index: 1001 !important;
 }

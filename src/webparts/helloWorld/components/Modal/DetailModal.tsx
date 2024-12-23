@@ -4,12 +4,13 @@ import { useState } from 'react';
 import {
 	DEFAULT_POSITION_X,
 	DEFAULT_POSITION_Y,
-	NODE_GAP,
+	HORIZONTAL_NODE_GAP,
 	NODE_GROUP_MIN_HEIGHT,
 	NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 	NODE_MIN_HEIGHT,
 	NODE_MIN_WIDTH,
-} from '../../../../Contants';
+	VERTICAL_NODE_GAP,
+} from '../../../../Constants';
 import { NODE_TYPE } from '../../../../types/common';
 import { hashString } from '../../../../Utils';
 import { AppNode } from '../nodes/types';
@@ -56,8 +57,8 @@ const DetailModal = ({
 
 		const positionX = nodeGroup
 			? nodesInGroup.reduce((prevValue, current) => {
-					return prevValue + (current.measured?.width ?? 0) + NODE_GAP;
-				}, NODE_GAP)
+					return prevValue + (current.measured?.width ?? 0) + HORIZONTAL_NODE_GAP;
+				}, HORIZONTAL_NODE_GAP)
 			: DEFAULT_POSITION_X;
 
 		const postionY = nodeGroup
@@ -67,7 +68,7 @@ const DetailModal = ({
 						.filter((item) => !item.parentId)
 						.map((item) => item.position.y + (item.measured?.height ?? 0)),
 					DEFAULT_POSITION_Y,
-				) + NODE_GAP;
+				) + VERTICAL_NODE_GAP;
 
 		const newNode = {
 			id: hashString(nodeName),
@@ -90,15 +91,15 @@ const DetailModal = ({
 				measured: {
 					width: nodesInGroup.reduce((prevValue, current) => {
 						return prevValue + (current.measured?.width ?? 0);
-					}, NODE_GAP),
+					}, HORIZONTAL_NODE_GAP),
 					height:
 						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
 						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 				},
 				style: {
 					minWidth: nodesInGroup.reduce((prevValue, current) => {
-						return prevValue + (current.measured?.width ?? 0) + NODE_GAP;
-					}, NODE_GAP),
+						return prevValue + (current.measured?.width ?? 0) + HORIZONTAL_NODE_GAP;
+					}, HORIZONTAL_NODE_GAP),
 					minHeight:
 						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
 						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,

@@ -45,7 +45,7 @@ export default ({
 				path={path}
 				markerEnd={markerEnd}
 				type='smoothstep'
-				className='asd-asd'
+				className='custom-edge'
 			/>
 			<EdgeLabelRenderer>
 				<div
@@ -56,12 +56,14 @@ export default ({
 						alignItems: 'center',
 					}}
 				>
-					<p
-						className='label'
-						style={{ marginLeft: -3, backgroundColor: '#fff' }}
-					>
-						{label}
-					</p>
+					{label && (
+						<p
+							className='label'
+							style={{ marginLeft: -3, backgroundColor: '#fff' }}
+						>
+							{label}
+						</p>
+					)}
 					<div className='menu'>
 						<OverflowSetCustomExample
 							onDisconnectNode={onDisconnectNode}
