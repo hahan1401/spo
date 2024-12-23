@@ -73,8 +73,6 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 				Nodes: data.Nodes ? (JSON.parse(data.Nodes) as DiagramDetail['Nodes']) : undefined,
 			};
 
-			console.log('_data', _data);
-
 			setDiagramDetail(_data);
 			setNodes((nodes) => nodes.concat(_data.Nodes as AppNode[]));
 			setEdges((edges) => edges.concat(_data.Edges as Edge[]));
@@ -93,7 +91,6 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 				.update({ Edges: JSON.stringify(edges), Nodes: JSON.stringify(nodes) });
 		}
 	};
-	console.log('nodes', nodes);
 
 	useEffect(() => {
 		void getWebpartContent();

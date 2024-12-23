@@ -40,7 +40,7 @@ const NodeGroupModal = ({
 			id: hashString(name),
 			type: 'labeled-group',
 			position: { x: DEFAULT_POSITION_X, y: postionY },
-			style: { minHeight: NODE_GROUP_MIN_HEIGHT },
+			style: { height: NODE_GROUP_MIN_HEIGHT },
 			data: { label: name },
 		} as AppNode;
 		addNodes([newNode]);

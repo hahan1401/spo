@@ -38,7 +38,8 @@ const DetailModal = ({
 	isModalOpen?: boolean;
 	hideModal?: () => void;
 }) => {
-	const { getNodes, addNodes, updateNode } = useReactFlow<AppNode>();
+	const isLabeledNode = node?.type === 'labeled-group';
+	const { getNodes, addNodes, updateNode, deleteElements, getNode } = useReactFlow<AppNode>();
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
 	const [backgroundColor, setBackgroundColor] = useState(node?.style?.backgroundColor ?? '#fff');
@@ -87,8 +88,11 @@ const DetailModal = ({
 		} as AppNode;
 		if (nodeGroup) {
 			nodesInGroup = [...nodesInGroup, newNode];
+			const parentNode = getNode(nodeGroup);
 			updateNode(nodeGroup, {
+				...parentNode,
 				measured: {
+					...parentNode?.measured,
 					width: nodesInGroup.reduce((prevValue, current) => {
 						return prevValue + (current.measured?.width ?? 0);
 					}, HORIZONTAL_NODE_GAP),
@@ -97,10 +101,11 @@ const DetailModal = ({
 						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 				},
 				style: {
-					minWidth: nodesInGroup.reduce((prevValue, current) => {
+					...parentNode?.style,
+					width: nodesInGroup.reduce((prevValue, current) => {
 						return prevValue + (current.measured?.width ?? 0) + HORIZONTAL_NODE_GAP;
 					}, HORIZONTAL_NODE_GAP),
-					minHeight:
+					height:
 						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
 						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 				},
@@ -130,15 +135,17 @@ const DetailModal = ({
 				}}
 			/>
 
-			<Dropdown
-				placeholder='Select group'
-				label='Select group'
-				options={getNodeGroupOptions(getNodes())}
-				onChange={(_, option) => {
-					setNodeGroup(option?.key?.toString() ?? '');
-				}}
-				selectedKey={nodeGroup}
-			/>
+			{!isLabeledNode && (
+				<Dropdown
+					placeholder='Select group'
+					label='Select group'
+					options={getNodeGroupOptions(getNodes())}
+					onChange={(_, option) => {
+						setNodeGroup(option?.key?.toString() ?? '');
+					}}
+					selectedKey={nodeGroup}
+				/>
+			)}
 
 			<div>
 				<p>Background color:</p>
@@ -171,16 +178,34 @@ const DetailModal = ({
 			</div>
 
 			<PrimaryButton
-				onClick={() => {
+				onClick={async () => {
 					if (node?.id) {
-						updateNode(node.id, {
-							data: { label: nodeName },
-							parentId: nodeGroup,
-							style: {
-								backgroundColor,
-								color: textColor,
-							},
-						});
+						if (isLabeledNode) {
+							updateNode(node.id, {
+								...node,
+								data: { label: nodeName },
+								style: {
+									...node.style,
+									backgroundColor,
+									color: textColor,
+								},
+								...(nodeGroup ? { parentId: nodeGroup, extent: 'parent', position: { x: 0, y: 0 } } : {}),
+							});
+						} else {
+							if (node.parentId !== nodeGroup) {
+								await deleteElements({ nodes: [{ id: node.id }] });
+								addNode();
+							} else {
+								updateNode(node.id, {
+									data: { label: nodeName },
+									style: {
+										backgroundColor,
+										color: textColor,
+									},
+									...(nodeGroup ? { parentId: nodeGroup, extent: 'parent', position: { x: 0, y: 0 } } : {}),
+								});
+							}
+						}
 					} else {
 						addNode();
 					}

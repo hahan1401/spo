@@ -1,0 +1,8 @@
+.customNode {
+	background-color: inherit;
+	padding: 10px;
+	font-size: 12px;
+	color: var(--xy-node-color, var(--xy-node-color-default));
+	text-align: center;
+	border: var(--xy-node-border, var(--xy-node-border-default));
+}

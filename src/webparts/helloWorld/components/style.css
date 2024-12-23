@@ -8,10 +8,6 @@
 	background-color: inherit;
 }
 
-.react-flow__node.parent {
-	/* background-color: transparent; */
-}
-
 .button-edge__label {
 	position: absolute;
 	pointer-events: all;
@@ -39,4 +35,10 @@
 
 svg:has(.custom-edge) {
 	z-index: 1001 !important;
+}
+
+.react-flow__node-labeled-group > .react-flow__node-default{
+	height: 100%;
+	width: 100%;
+	background-color: inherit;
 }

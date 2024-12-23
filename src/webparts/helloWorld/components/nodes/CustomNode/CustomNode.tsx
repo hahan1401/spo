@@ -3,9 +3,9 @@ import React from 'react';
 
 import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
-import DetailModal from '../Modal/DetailModal';
-import { ModalBasicExample } from '../Modal/ModalBasicExample';
-import { AppNode, type CustomNode as TCustomNode } from './types';
+import DetailModal from '../../Modal/DetailModal';
+import { ModalBasicExample } from '../../Modal/ModalBasicExample';
+import { AppNode, type CustomNode as TCustomNode } from '../types';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
