@@ -7,3 +7,5 @@ export const hashString = (str: string) => {
 	}
 	return `${str}_${Math.abs(hash).toString(36)}`;
 };
+
+export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

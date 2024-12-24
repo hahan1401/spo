@@ -22,11 +22,6 @@ const NodeGroupModal = ({
 	const { addNodes, getNodes } = useReactFlow<AppNode>();
 	const [name, setName] = useState(node?.data.label ?? '');
 
-	const onCloseModal = () => {
-		setName('');
-		hideModal?.();
-	};
-
 	const addNode = () => {
 		const postionY =
 			Math.max(
@@ -44,14 +39,14 @@ const NodeGroupModal = ({
 			data: { label: name },
 		} as AppNode;
 		addNodes([newNode]);
-		onCloseModal();
+		hideModal?.();
 	};
 
-	return (
+	return isModalOpen ? (
 		<>
 			<Modal
 				isOpen={isModalOpen}
-				onDismiss={onCloseModal}
+				onDismiss={hideModal}
 				isBlocking={false}
 				styles={{
 					main: {
@@ -78,6 +73,8 @@ const NodeGroupModal = ({
 				</PrimaryButton>
 			</Modal>
 		</>
+	) : (
+		<></>
 	);
 };
 

@@ -118,6 +118,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 						fitView
 						onDragOver={onDragOver}
 						setNodes={setNodes}
+						snapToGrid={true}
 					>
 						<Background />
 						<MiniMap />

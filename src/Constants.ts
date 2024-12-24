@@ -6,3 +6,11 @@ export const NODE_GROUP_MIN_HEIGHT = 90;
 export const NODE_GROUP_NODE_ITEM_DIFF_HEIGHT = 20;
 export const DEFAULT_POSITION_X = 150;
 export const DEFAULT_POSITION_Y = 0;
+
+export const NODE_SHAPES = {
+	trapezoid: 'trapezoid',
+	rhombus: 'rhombus',
+	penagon: 'penagon',
+	ellipse: 'ellipse',
+	circle: 'circle',
+} as const;

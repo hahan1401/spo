@@ -9,13 +9,23 @@ import { AppNode, type CustomNode as TCustomNode } from '../types';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
-export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
+export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
 	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
+
+	const hasShape = !!data?.shape;
+	const parentNode = parentId ? getNode(parentId) : undefined;
+	const currentNode = getNode(id);
+
 	return (
 		<>
 			{/* We add this class to use the same styles as React Flow's default nodes. */}
-			<div className='react-flow__node-default'>
+			<div
+				className='react-flow__node-default'
+				style={{
+					...(hasShape && parentNode ? { backgroundColor: parentNode.style?.backgroundColor ?? 'inherit' } : {}),
+				}}
+			>
 				<RF.NodeResizer
 					minWidth={100}
 					minHeight={30}
@@ -36,16 +46,24 @@ export const CustomNode = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<
 						Delete
 					</DefaultButton>
 				</RF.NodeToolbar>
-				{data.label && (
-					<div
-						onClick={() => {
-							data.onClick?.(id);
-						}}
-					>
-						{data.label}
-					</div>
-				)}
-				<ModalBasicExample />
+				<div
+					className={`react-flow__node-custom-content ${data?.shape ? `react-flow__node-shape-${data.shape}` : ''}`}
+					style={{
+						...(hasShape ? { backgroundColor: currentNode?.style?.backgroundColor ?? 'inherit' } : {}),
+					}}
+				>
+					{data.label && (
+						<div
+							onClick={() => {
+								data.onClick?.(id);
+							}}
+							className={`react-flow__node-${type}-label`}
+						>
+							{data.label}
+						</div>
+					)}
+					<ModalBasicExample />
+				</div>
 
 				<Handle
 					type='target'

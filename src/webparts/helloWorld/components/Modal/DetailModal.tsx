@@ -9,11 +9,20 @@ import {
 	NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 	NODE_MIN_HEIGHT,
 	NODE_MIN_WIDTH,
+	NODE_SHAPES,
 	VERTICAL_NODE_GAP,
 } from '../../../../Constants';
 import { NODE_TYPE } from '../../../../types/common';
-import { hashString } from '../../../../Utils';
-import { AppNode } from '../nodes/types';
+import { capitalizeFirstLetter, hashString } from '../../../../Utils';
+import { AppNode, CustomNode, NodeShapeType } from '../nodes/types';
+
+const NODE_SHAPE_OPTIONS = [
+	{ key: NODE_SHAPES.circle, text: capitalizeFirstLetter(NODE_SHAPES.circle) },
+	{ key: NODE_SHAPES.ellipse, text: capitalizeFirstLetter(NODE_SHAPES.ellipse) },
+	{ key: NODE_SHAPES.penagon, text: capitalizeFirstLetter(NODE_SHAPES.penagon) },
+	{ key: NODE_SHAPES.rhombus, text: capitalizeFirstLetter(NODE_SHAPES.rhombus) },
+	{ key: NODE_SHAPES.trapezoid, text: capitalizeFirstLetter(NODE_SHAPES.trapezoid) },
+];
 
 const colorPickerStyles: Partial<IColorPickerStyles> = {
 	panel: { padding: 12 },
@@ -42,17 +51,9 @@ const DetailModal = ({
 	const { getNodes, addNodes, updateNode, deleteElements, getNode } = useReactFlow<AppNode>();
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
+	const [nodeShape, setNodeShape] = useState<NodeShapeType>((node as CustomNode)?.data?.shape as NodeShapeType);
 	const [backgroundColor, setBackgroundColor] = useState(node?.style?.backgroundColor ?? '#fff');
 	const [textColor, setTextColor] = useState(node?.style?.color ?? '#000');
-
-	const onCloseModal = () => {
-		setNodeName('');
-		setNodeGroup('');
-		hideModal?.();
-		setBackgroundColor('#fff');
-		setTextColor('#000');
-	};
-
 	const addNode = () => {
 		let nodesInGroup = getNodes().filter((item) => item.parentId === nodeGroup);
 
@@ -83,7 +84,7 @@ const DetailModal = ({
 				color: textColor,
 			},
 			measured: { height: NODE_MIN_HEIGHT, width: NODE_MIN_WIDTH },
-			data: { label: nodeName },
+			data: { label: nodeName, shape: nodeShape },
 			...(nodeGroup ? { extent: 'parent', parentId: nodeGroup } : {}),
 		} as AppNode;
 		if (nodeGroup) {
@@ -114,10 +115,10 @@ const DetailModal = ({
 		addNodes([newNode]);
 	};
 
-	return (
+	return isModalOpen ? (
 		<Modal
 			isOpen={isModalOpen}
-			onDismiss={onCloseModal}
+			onDismiss={hideModal}
 			isBlocking={false}
 			styles={{
 				main: {
@@ -134,6 +135,18 @@ const DetailModal = ({
 					setNodeName(e.target.value);
 				}}
 			/>
+
+			{!isLabeledNode && (
+				<Dropdown
+					placeholder='Select shape'
+					label='Select shape'
+					options={NODE_SHAPE_OPTIONS}
+					onChange={(_, option) => {
+						setNodeShape(option?.key as NodeShapeType);
+					}}
+					selectedKey={nodeShape}
+				/>
+			)}
 
 			{!isLabeledNode && (
 				<Dropdown
@@ -197,24 +210,32 @@ const DetailModal = ({
 								addNode();
 							} else {
 								updateNode(node.id, {
-									data: { label: nodeName },
+									data: { label: nodeName, shape: nodeShape },
 									style: {
 										backgroundColor,
 										color: textColor,
 									},
-									...(nodeGroup ? { parentId: nodeGroup, extent: 'parent', position: { x: 0, y: 0 } } : {}),
+									...(nodeGroup
+										? {
+												parentId: nodeGroup,
+												extent: 'parent',
+												position: node?.position ? node.position : { x: 0, y: 0 },
+											}
+										: {}),
 								});
 							}
 						}
 					} else {
 						addNode();
 					}
-					onCloseModal();
+					hideModal?.();
 				}}
 			>
 				save
 			</PrimaryButton>
 		</Modal>
+	) : (
+		<></>
 	);
 };
 

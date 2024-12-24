@@ -5,15 +5,16 @@ import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import DetailModal from '../../Modal/DetailModal';
 import { AppNode, type CustomNode as TCustomNode } from '../types';
+import styles from './styles.module.scss';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
-export const LabeledGroup = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
+export const LabeledGroup = ({ data, id, type }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
 	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
 	return (
 		<>
-			<div className='react-flow__node-default'>
+			<div className={`react-flow__node-default ${styles.labeledGroupWrapper}`}>
 				<RF.NodeResizer
 					minWidth={100}
 					minHeight={30}
@@ -39,6 +40,7 @@ export const LabeledGroup = ({ data, id }: RF.NodeProps<TCustomNode>): ReturnTyp
 						onClick={() => {
 							data.onClick?.(id);
 						}}
+						className={`react-flow__node-${type}-label`}
 					>
 						{data.label}
 					</div>
