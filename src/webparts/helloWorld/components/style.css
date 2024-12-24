@@ -80,3 +80,12 @@ svg:has(.custom-edge) {
 	width: 100%;
 	background-color: inherit;
 }
+
+
+
+.context-menu {
+  background: white;
+  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+  position: fixed;
+  z-index: 10;
+}

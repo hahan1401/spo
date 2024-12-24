@@ -10,27 +10,36 @@ import {
 	useNodesState,
 	type OnConnect,
 } from '@xyflow/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss';
 
 import '@pnp/sp/profiles';
 import '@xyflow/react/dist/style.css';
 import './style.css';
 
+import { useBoolean } from '@fluentui/react-hooks';
 import { spfi, SPFx } from '@pnp/sp';
 import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 import '@pnp/sp/site-users/web';
+import ContextMenu from '../ContextMenu';
 import { getSP } from '../pnpjsConfig';
 import { _edges, _nodes } from '../test';
 import { DiagramDetail, DiagramDetailResponse } from '../types';
 import { edgeTypes } from './edges';
 import { IHelloWorldProps } from './IHelloWorldProps';
+import DetailModal from './Modal/DetailModal';
 import { nodeTypes } from './nodes';
 import { AppNode } from './nodes/types';
 import ReactFlowProviderCustom from './ReactFlowProviderCustom';
 import Sidebar from './Sidebar';
 import { DnDProvider } from './Sidebar/DnDContext';
 import SidePanel from './SidePanel';
+
+export interface IMenu {
+	node?: AppNode;
+	top?: number;
+	left?: number;
+}
 
 const edgeOptions = {
 	markerEnd: {
@@ -49,6 +58,30 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 
 	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>(_nodes as AppNode[]);
 	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(_edges as Edge[]);
+
+	const [menu, setMenu] = useState<IMenu | null>(null);
+	const [showContextMenu, setShowContextMenu] = useState(false);
+	const ref = useRef<HTMLDivElement>(null);
+
+	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
+
+	const onNodeContextMenu = useCallback(
+		(event, node) => {
+			event.preventDefault();
+
+			const el = document.querySelector(`*[data-id="${node.id}"]`);
+			const elementOffset = el?.getBoundingClientRect() as DOMRect;
+			console.log('elementOffset', elementOffset);
+			setMenu({
+				node: node,
+				top: elementOffset?.top,
+				left: (elementOffset?.left ?? 0) + (elementOffset?.width ?? 0) / 2,
+			});
+			setShowContextMenu(true);
+		},
+		[setMenu],
+	);
+	const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
 	const sp = getSP();
 	const spCache = spfi(sp).using(SPFx(context));
@@ -108,6 +141,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 			<ReactFlowProvider>
 				<DnDProvider>
 					<ReactFlowProviderCustom
+						ref={ref}
 						nodes={nodes}
 						nodeTypes={nodeTypes}
 						onNodesChange={(e) => {
@@ -127,12 +161,24 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 						setNodes={setNodes}
 						snapToGrid={true}
 						snapGrid={[4, 4]}
+						onPaneClick={onPaneClick}
+						onNodeContextMenu={onNodeContextMenu}
 					>
 						<Background />
 						<MiniMap />
 						<Controls />
 
 						<SidePanel />
+
+						{showContextMenu && (
+							<ContextMenu
+								showModal={showModal}
+								closeContextMenu={() => {
+									setShowContextMenu(false);
+								}}
+								{...menu}
+							/>
+						)}
 					</ReactFlowProviderCustom>
 					<Sidebar
 						onSave={() => {
@@ -140,6 +186,14 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 						}}
 					/>
 				</DnDProvider>
+
+				{menu?.node && (
+					<DetailModal
+						hideModal={hideModal}
+						isModalOpen={isModalOpen}
+						node={menu.node}
+					/>
+				)}
 			</ReactFlowProvider>
 		</div>
 	);

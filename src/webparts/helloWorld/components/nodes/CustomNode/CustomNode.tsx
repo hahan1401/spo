@@ -1,17 +1,14 @@
 import * as RF from '@xyflow/react';
 import React from 'react';
 
-import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
-import DetailModal from '../../Modal/DetailModal';
 import { ModalBasicExample } from '../../Modal/ModalBasicExample';
 import { AppNode, type CustomNode as TCustomNode } from '../types';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
 export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
-	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
-	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
+	const { getNode } = RF.useReactFlow<AppNode>();
 	const [isModalInforOpen, { setTrue: showInfoModal, setFalse: hideInfoModal }] = useBoolean(false);
 
 	const hasShape = !!data?.shape;
@@ -31,22 +28,6 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 					minWidth={100}
 					minHeight={30}
 				/>
-				<RF.NodeToolbar>
-					<DefaultButton
-						onClick={() => {
-							showModal();
-						}}
-					>
-						Edit
-					</DefaultButton>
-					<DefaultButton
-						onClick={() => {
-							void deleteElements({ nodes: [{ id: id }] });
-						}}
-					>
-						Delete
-					</DefaultButton>
-				</RF.NodeToolbar>
 				<div
 					className={`react-flow__node-custom-content ${data?.shape ? `react-flow__node-shape-${data.shape}` : ''}`}
 					style={{
@@ -93,12 +74,6 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 					id={`-left_${id}`}
 				/>
 			</div>
-
-			<DetailModal
-				hideModal={hideModal}
-				isModalOpen={isModalOpen}
-				node={getNode(id)}
-			/>
 		</>
 	);
 };
