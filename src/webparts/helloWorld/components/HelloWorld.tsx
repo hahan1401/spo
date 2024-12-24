@@ -21,6 +21,7 @@ import { spfi, SPFx } from '@pnp/sp';
 import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 import '@pnp/sp/site-users/web';
 import { getSP } from '../pnpjsConfig';
+import { _edges, _nodes } from '../test';
 import { DiagramDetail, DiagramDetailResponse } from '../types';
 import { edgeTypes } from './edges';
 import { IHelloWorldProps } from './IHelloWorldProps';
@@ -32,21 +33,27 @@ import { DnDProvider } from './Sidebar/DnDContext';
 import SidePanel from './SidePanel';
 
 const edgeOptions = {
-	type: 'customEdge',
-	markerEnd: { type: MarkerType.ArrowClosed } as Edge['markerEnd'],
-};
+	markerEnd: {
+		type: MarkerType.ArrowClosed,
+		color: '#000',
+	},
+	style: {
+		strokeWidth: 2,
+		stroke: '#000',
+	},
+} as Edge;
 
 const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	const [, setUser] = useState<null | ISiteUserInfo>(null);
 	const [diagramDetail, setDiagramDetail] = useState<null | DiagramDetail>(null);
 
-	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>(_nodes as AppNode[]);
+	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(_edges as Edge[]);
 
 	const sp = getSP();
 	const spCache = spfi(sp).using(SPFx(context));
 	const onConnect: OnConnect = useCallback(
-		(connection) => setEdges((edges) => addEdge({ ...connection, type: 'customEdge' }, edges)),
+		(connection) => setEdges((edges) => addEdge({ ...connection, ...edgeOptions, type: 'customEdge' }, edges)),
 		[setEdges],
 	);
 
@@ -119,6 +126,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 						onDragOver={onDragOver}
 						setNodes={setNodes}
 						snapToGrid={true}
+						snapGrid={[4, 4]}
 					>
 						<Background />
 						<MiniMap />

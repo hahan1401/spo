@@ -12,6 +12,7 @@ const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {
 export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
 	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
+	const [isModalInforOpen, { setTrue: showInfoModal, setFalse: hideInfoModal }] = useBoolean(false);
 
 	const hasShape = !!data?.shape;
 	const parentNode = parentId ? getNode(parentId) : undefined;
@@ -51,6 +52,9 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 					style={{
 						...(hasShape ? { backgroundColor: currentNode?.style?.backgroundColor ?? 'inherit' } : {}),
 					}}
+					onClick={() => {
+						showInfoModal();
+					}}
 				>
 					{data.label && (
 						<div
@@ -62,7 +66,10 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 							{data.label}
 						</div>
 					)}
-					<ModalBasicExample />
+					<ModalBasicExample
+						hideModal={hideInfoModal}
+						isModalOpen={isModalInforOpen}
+					/>
 				</div>
 
 				<Handle

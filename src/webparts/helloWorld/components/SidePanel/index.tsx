@@ -1,18 +1,18 @@
 import { DefaultButton } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import { Panel } from '@xyflow/react';
-import React from 'react';
+import React, { useState } from 'react';
 import DetailModal from '../Modal/DetailModal';
-import NodeGroupModal from './NodeGroupModal';
 const SidePanel: React.FC = () => {
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
-	const [isGroupModalOpen, { setTrue: showGroupModal, setFalse: hideGroupModal }] = useBoolean(false);
+	const [isCreatingGroup, setIsCreatingGroup] = useState(false);
 
 	return (
 		<>
 			<Panel position='top-left'>
 				<DefaultButton
 					onClick={() => {
+						setIsCreatingGroup(false);
 						showModal();
 					}}
 				>
@@ -20,22 +20,21 @@ const SidePanel: React.FC = () => {
 				</DefaultButton>
 				<DefaultButton
 					onClick={() => {
-						showGroupModal();
+						setIsCreatingGroup(true);
+						showModal();
 					}}
 				>
 					Create Node Group
 				</DefaultButton>
 			</Panel>
 
-			<DetailModal
-				isModalOpen={isModalOpen}
-				hideModal={hideModal}
-			/>
-
-			<NodeGroupModal
-				isModalOpen={isGroupModalOpen}
-				hideModal={hideGroupModal}
-			/>
+			{isModalOpen && (
+				<DetailModal
+					isModalOpen={isModalOpen}
+					hideModal={hideModal}
+					isCreatingGroup={isCreatingGroup}
+				/>
+			)}
 		</>
 	);
 };

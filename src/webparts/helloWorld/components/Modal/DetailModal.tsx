@@ -6,9 +6,7 @@ import {
 	DEFAULT_POSITION_Y,
 	HORIZONTAL_NODE_GAP,
 	NODE_GROUP_MIN_HEIGHT,
-	NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
 	NODE_MIN_HEIGHT,
-	NODE_MIN_WIDTH,
 	NODE_SHAPES,
 	VERTICAL_NODE_GAP,
 } from '../../../../Constants';
@@ -42,20 +40,22 @@ const DetailModal = ({
 	node,
 	hideModal,
 	isModalOpen,
+	isCreatingGroup,
 }: {
 	node?: AppNode;
 	isModalOpen?: boolean;
 	hideModal?: () => void;
+	isCreatingGroup?: boolean;
 }) => {
 	const isLabeledNode = node?.type === 'labeled-group';
-	const { getNodes, addNodes, updateNode, deleteElements, getNode } = useReactFlow<AppNode>();
+	const { getNodes, addNodes, updateNode, deleteElements } = useReactFlow<AppNode>();
 	const [nodeName, setNodeName] = useState(node?.data.label ?? '');
 	const [nodeGroup, setNodeGroup] = useState(node?.parentId);
 	const [nodeShape, setNodeShape] = useState<NodeShapeType>((node as CustomNode)?.data?.shape as NodeShapeType);
 	const [backgroundColor, setBackgroundColor] = useState(node?.style?.backgroundColor ?? '#fff');
 	const [textColor, setTextColor] = useState(node?.style?.color ?? '#000');
 	const addNode = () => {
-		let nodesInGroup = getNodes().filter((item) => item.parentId === nodeGroup);
+		const nodesInGroup = getNodes().filter((item) => item.parentId === nodeGroup);
 
 		const positionX = nodeGroup
 			? nodesInGroup.reduce((prevValue, current) => {
@@ -74,7 +74,7 @@ const DetailModal = ({
 
 		const newNode = {
 			id: hashString(nodeName),
-			type: 'custom-node',
+			type: isCreatingGroup ? 'labeled-group' : 'custom-node',
 			position: {
 				x: positionX,
 				y: postionY,
@@ -83,35 +83,35 @@ const DetailModal = ({
 				backgroundColor,
 				color: textColor,
 			},
-			measured: { height: NODE_MIN_HEIGHT, width: NODE_MIN_WIDTH },
+			// measured: { height: NODE_MIN_HEIGHT, width: NODE_MIN_WIDTH },
 			data: { label: nodeName, shape: nodeShape },
 			...(nodeGroup ? { extent: 'parent', parentId: nodeGroup } : {}),
 		} as AppNode;
-		if (nodeGroup) {
-			nodesInGroup = [...nodesInGroup, newNode];
-			const parentNode = getNode(nodeGroup);
-			updateNode(nodeGroup, {
-				...parentNode,
-				measured: {
-					...parentNode?.measured,
-					width: nodesInGroup.reduce((prevValue, current) => {
-						return prevValue + (current.measured?.width ?? 0);
-					}, HORIZONTAL_NODE_GAP),
-					height:
-						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
-						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
-				},
-				style: {
-					...parentNode?.style,
-					width: nodesInGroup.reduce((prevValue, current) => {
-						return prevValue + (current.measured?.width ?? 0) + HORIZONTAL_NODE_GAP;
-					}, HORIZONTAL_NODE_GAP),
-					height:
-						Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
-						NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
-				},
-			});
-		}
+		// if (nodeGroup) {
+		// 	nodesInGroup = [...nodesInGroup, newNode];
+		// 	const parentNode = getNode(nodeGroup);
+		// 	updateNode(nodeGroup, {
+		// 		...parentNode,
+		// measured: {
+		// 	...parentNode?.measured,
+		// 	width: nodesInGroup.reduce((prevValue, current) => {
+		// 		return prevValue + (current.measured?.width ?? 0);
+		// 	}, HORIZONTAL_NODE_GAP),
+		// 	height:
+		// 		Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
+		// 		NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
+		// },
+		// style: {
+		// 	...parentNode?.style,
+		// 	width: nodesInGroup.reduce((prevValue, current) => {
+		// 		return prevValue + (current.measured?.width ?? 0) + HORIZONTAL_NODE_GAP;
+		// 	}, HORIZONTAL_NODE_GAP),
+		// 	height:
+		// 		Math.max(...nodesInGroup.map((item) => item.measured?.height ?? 0), newNode.measured?.height ?? 0) +
+		// 		NODE_GROUP_NODE_ITEM_DIFF_HEIGHT,
+		// },
+		// });
+		// }
 		addNodes([newNode]);
 	};
 
@@ -148,17 +148,17 @@ const DetailModal = ({
 				/>
 			)}
 
-			{!isLabeledNode && (
-				<Dropdown
-					placeholder='Select group'
-					label='Select group'
-					options={getNodeGroupOptions(getNodes())}
-					onChange={(_, option) => {
-						setNodeGroup(option?.key?.toString() ?? '');
-					}}
-					selectedKey={nodeGroup}
-				/>
-			)}
+			{/* {!isLabeledNode && ( */}
+			<Dropdown
+				placeholder='Select group'
+				label='Select group'
+				options={getNodeGroupOptions(getNodes())}
+				onChange={(_, option) => {
+					setNodeGroup(option?.key?.toString() ?? '');
+				}}
+				selectedKey={nodeGroup}
+			/>
+			{/* )} */}
 
 			<div>
 				<p>Background color:</p>
@@ -202,7 +202,9 @@ const DetailModal = ({
 									backgroundColor,
 									color: textColor,
 								},
-								...(nodeGroup ? { parentId: nodeGroup, extent: 'parent', position: { x: 0, y: 0 } } : {}),
+								...(nodeGroup
+									? { parentId: nodeGroup, extent: 'parent', position: node?.position ? node.position : { x: 0, y: 0 } }
+									: {}),
 							});
 						} else {
 							if (node.parentId !== nodeGroup) {

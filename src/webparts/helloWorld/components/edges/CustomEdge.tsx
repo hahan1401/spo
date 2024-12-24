@@ -21,6 +21,7 @@ export default ({
 	targetPosition,
 	markerEnd,
 	label,
+	...rest
 }: EdgeProps): ReturnType<React.FC> => {
 	const { setEdges } = useReactFlow();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
@@ -42,6 +43,7 @@ export default ({
 	return (
 		<>
 			<BaseEdge
+				{...rest}
 				path={path}
 				markerEnd={markerEnd}
 				type='smoothstep'
@@ -49,7 +51,7 @@ export default ({
 			/>
 			<EdgeLabelRenderer>
 				<div
-					className={`button-edge__label nodrag nopan`}
+					className={`button-edge__label button-edge__label-custom nodrag nopan`}
 					style={{
 						transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
 						display: 'flex',

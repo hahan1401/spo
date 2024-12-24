@@ -7,7 +7,7 @@ import DetailModal from '../../Modal/DetailModal';
 import { AppNode, type CustomNode as TCustomNode } from '../types';
 import styles from './styles.module.scss';
 
-const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
+// const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
 
 export const LabeledGroup = ({ data, id, type }: RF.NodeProps<TCustomNode>): ReturnType<React.FC> => {
 	const { deleteElements, getNode } = RF.useReactFlow<AppNode>();
@@ -46,7 +46,7 @@ export const LabeledGroup = ({ data, id, type }: RF.NodeProps<TCustomNode>): Ret
 					</div>
 				)}
 
-				<Handle
+				{/* <Handle
 					type='target'
 					position={RF.Position.Top}
 					id={`-top_${id}`}
@@ -65,7 +65,7 @@ export const LabeledGroup = ({ data, id, type }: RF.NodeProps<TCustomNode>): Ret
 					type='target'
 					position={RF.Position.Left}
 					id={`-left_${id}`}
-				/>
+				/> */}
 			</div>
 
 			<DetailModal
