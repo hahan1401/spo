@@ -32,6 +32,7 @@
     "@microsoft/rush-stack-compiler-4.7": "0.1.0",
     "@microsoft/sp-build-web": "1.20.2",
     "@microsoft/sp-module-interfaces": "1.20.2",
+    "@pnp/sp": "^4.8.0",
     "@rushstack/eslint-config": "4.0.1",
     "@types/react": "17.0.45",
     "@types/react-dom": "17.0.17",
@@ -45,5 +46,6 @@
     "prettier": "^3.4.2",
     "spfx-fast-serve-helpers": "^1.20.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "packageManager": "pnpm@9.15.1"
 }
