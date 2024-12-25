@@ -32,7 +32,6 @@ export const contentStyles = mergeStyleSets({
 		padding: '0 24px 24px 24px',
 		overflowY: 'hidden',
 		selectors: {
-			p: { margin: '14px 0' },
 			'p:first-child': { marginTop: 0 },
 			'p:last-child': { marginBottom: 0 },
 		},

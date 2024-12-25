@@ -2,7 +2,7 @@ import * as RF from '@xyflow/react';
 import React from 'react';
 
 import { useBoolean } from '@fluentui/react-hooks';
-import { ModalBasicExample } from '../../Modal/ModalBasicExample';
+import { TaskBoxModal } from '../../Modal/TaskBox/TaskBoxModal';
 import { AppNode, type CustomNode as TCustomNode } from '../types';
 
 const Handle: React.FC<RF.HandleProps> = (props: RF.HandleProps) => <RF.Handle {...props} />;
@@ -47,7 +47,7 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 							{data.label}
 						</div>
 					)}
-					<ModalBasicExample
+					<TaskBoxModal
 						hideModal={hideInfoModal}
 						isModalOpen={isModalInforOpen}
 					/>
