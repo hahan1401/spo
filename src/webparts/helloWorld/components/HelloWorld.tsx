@@ -16,8 +16,12 @@ import styles from './styles.module.scss';
 import '@xyflow/react/dist/style.css';
 import './style.css';
 
+import { IconButton, Link } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import { spfi, SPFx } from '@pnp/sp';
+import '@pnp/sp/files';
+import { IFileInfo } from '@pnp/sp/files';
+import { folderFromServerRelativePath } from '@pnp/sp/folders';
 import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 import '@pnp/sp/site-users/web';
 import { GROUPS } from '../../../constants/permissions';
@@ -56,6 +60,7 @@ const edgeOptions = {
 const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	const [, setUser] = useState<null | ISiteUserInfo>(null);
 	const [diagramDetail, setDiagramDetail] = useState<null | DiagramDetail>(null);
+	const [files, setFiles] = useState<IFileInfo[]>([]);
 
 	const [userGroups, setUserGroups] = useState<string[]>([]);
 	const canEdit = userGroups.includes(GROUPS.ADMIN);
@@ -140,80 +145,122 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 		setUserGroups(groups.map((item) => item.Title));
 	};
 
+	const getFiles = async () => {
+		const files = await folderFromServerRelativePath(sp.web, '/sites/Hahan/Shared Documents/Desktop').files();
+		console.log('files', files);
+		setFiles(files);
+	};
+
 	useEffect(() => {
 		void getWebpartContent();
 		void getUserGroups();
+		void getFiles();
 	}, []);
 
-	console.log('canEdit', canEdit);
-
 	return (
-		<div className={styles['reactFlow-Wrapper']}>
-			<ReactFlowProvider>
-				<DnDProvider>
-					<ReactFlowProviderCustom
-						ref={ref}
-						deleteKeyCode={null}
-						nodes={nodes.map<AppNode>((item) => ({ ...item, draggable: canEdit, data: { ...item.data, canEdit } }))}
-						nodeTypes={nodeTypes}
-						onNodesChange={(e) => {
-							onNodesChange(e);
-						}}
-						edges={edges.map<ICustomEdge>((item) => ({ ...item, data: { ...item.data, canEdit } }))}
-						edgeTypes={edgeTypes}
-						defaultEdgeOptions={edgeOptions}
-						onEdgesChange={(e) => {
-							onEdgesChange(e);
-						}}
-						onConnect={(e) => {
-							onConnect(e);
-						}}
-						fitView
-						onDragOver={onDragOver}
-						setNodes={setNodes}
-						snapToGrid={true}
-						snapGrid={[4, 4]}
-						onPaneClick={onPaneClick}
-						onNodeContextMenu={onNodeContextMenu}
-					>
-						<Background />
-						<MiniMap />
+		<>
+			<div className={styles['reactFlow-Wrapper']}>
+				<ReactFlowProvider>
+					<DnDProvider>
+						<ReactFlowProviderCustom
+							ref={ref}
+							deleteKeyCode={null}
+							nodes={nodes.map<AppNode>((item) => ({ ...item, draggable: canEdit, data: { ...item.data, canEdit } }))}
+							nodeTypes={nodeTypes}
+							onNodesChange={(e) => {
+								onNodesChange(e);
+							}}
+							edges={edges.map<ICustomEdge>((item) => ({ ...item, data: { ...item.data, canEdit } }))}
+							edgeTypes={edgeTypes}
+							defaultEdgeOptions={edgeOptions}
+							onEdgesChange={(e) => {
+								onEdgesChange(e);
+							}}
+							onConnect={(e) => {
+								onConnect(e);
+							}}
+							fitView
+							onDragOver={onDragOver}
+							setNodes={setNodes}
+							snapToGrid={true}
+							snapGrid={[4, 4]}
+							onPaneClick={onPaneClick}
+							onNodeContextMenu={onNodeContextMenu}
+						>
+							<Background />
+							<MiniMap />
 
+							{canEdit && (
+								<>
+									<Controls />
+									<SidePanel />
+								</>
+							)}
+
+							{canEdit && showContextMenu && (
+								<ContextMenu
+									showModal={showModal}
+									closeContextMenu={() => {
+										setShowContextMenu(false);
+									}}
+									{...menu}
+								/>
+							)}
+						</ReactFlowProviderCustom>
 						{canEdit && (
-							<>
-								<Controls />
-								<SidePanel />
-							</>
-						)}
-
-						{canEdit && showContextMenu && (
-							<ContextMenu
-								showModal={showModal}
-								closeContextMenu={() => {
-									setShowContextMenu(false);
+							<Sidebar
+								onSave={() => {
+									void handleSave();
 								}}
-								{...menu}
 							/>
 						)}
-					</ReactFlowProviderCustom>
-					{canEdit && (
-						<Sidebar
-							onSave={() => {
-								void handleSave();
-							}}
+					</DnDProvider>
+
+					{menu?.node && (
+						<DetailModal
+							hideModal={hideModal}
+							isModalOpen={isModalOpen}
+							node={menu.node}
 						/>
 					)}
-				</DnDProvider>
+				</ReactFlowProvider>
+			</div>
 
-				{menu?.node && (
-					<DetailModal
-						hideModal={hideModal}
-						isModalOpen={isModalOpen}
-						node={menu.node}
-					/>
-				)}
-			</ReactFlowProvider>
-		</div>
+			<div
+				style={{
+					maxWidth: 1800,
+					margin: 'auto',
+					padding: 20,
+				}}
+			>
+				<p style={{ fontSize: 20, fontWeight: 600, marginBottom: 8 }}>Documents: </p>
+				{files.map((file) => {
+					return (
+						<Link
+							href={file.ServerRelativeUrl}
+							key={file.ServerRelativeUrl}
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								gap: 8,
+							}}
+						>
+							<IconButton
+								iconProps={{ iconName: 'OpenFile' }}
+								title='OpenFile'
+								ariaLabel='OpenFile'
+								styles={{
+									icon: {
+										fontSize: 24,
+									},
+								}}
+							/>
+							<p>{file.ServerRelativeUrl.split('/').at(-1)}</p>
+						</Link>
+					);
+				})}
+			</div>
+		</>
 	);
 };
 
