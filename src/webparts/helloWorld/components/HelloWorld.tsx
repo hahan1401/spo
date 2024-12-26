@@ -27,7 +27,6 @@ import '@pnp/sp/site-users/web';
 import { GROUPS } from '../../../constants/permissions';
 import ContextMenu from '../ContextMenu';
 import { getSP } from '../pnpjsConfig';
-import { _edges, _nodes } from '../test';
 import { DiagramDetail, DiagramDetailResponse } from '../types';
 import { edgeTypes } from './edges';
 import { ICustomEdge } from './edges/types';
@@ -65,8 +64,8 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	const [userGroups, setUserGroups] = useState<string[]>([]);
 	const canEdit = userGroups.includes(GROUPS.ADMIN);
 
-	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>(_nodes as AppNode[]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState<ICustomEdge>(_edges as ICustomEdge[]);
+	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
+	const [edges, setEdges, onEdgesChange] = useEdgesState<ICustomEdge>([]);
 
 	const [menu, setMenu] = useState<IMenu | null>(null);
 	const [showContextMenu, setShowContextMenu] = useState(false);
@@ -107,11 +106,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 		const user = await sp.web.currentUser();
 		setUser(user);
 
-		const diagramDetail = (await spCache.web.lists
-			.getByTitle('WorkFlowDiagrams')
-			.items.filter<DiagramDetailResponse>((item) =>
-				item.number('AuthorId').equals(user.Id),
-			)()) as DiagramDetailResponse[];
+		const diagramDetail = (await spCache.web.lists.getByTitle('WorkFlowDiagrams').items()) as DiagramDetailResponse[];
 
 		if (diagramDetail[0]) {
 			const data = diagramDetail[0];
@@ -146,8 +141,10 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	};
 
 	const getFiles = async () => {
-		const files = await folderFromServerRelativePath(sp.web, '/sites/Hahan/Shared Documents/Desktop').files();
-		console.log('files', files);
+		const files = await folderFromServerRelativePath(
+			sp.web,
+			`${context.pageContext.site.serverRelativeUrl}/Shared Documents/Desktop`,
+		).files();
 		setFiles(files);
 	};
 
