@@ -3,10 +3,10 @@ import { AppNode } from '../nodes/types';
 
 type Context = [AppNode['type'], (type: AppNode['type']) => void];
 
-const DnDContext = createContext<Context>(['default', (_type_: AppNode['type']) => undefined]);
+const DnDContext = createContext<Context>(['custom-node', (_type_: AppNode['type']) => undefined]);
 
 export const DnDProvider = ({ children }: { children: React.ReactNode }) => {
-	const [type, setType] = useState<AppNode['type']>('default');
+	const [type, setType] = useState<AppNode['type']>('custom-node');
 
 	return <DnDContext.Provider value={[type, setType]}>{children}</DnDContext.Provider>;
 };

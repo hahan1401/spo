@@ -20,7 +20,7 @@ const onRenderOverflowButton = (overflowItems: any[] | undefined): JSX.Element =
 	);
 };
 
-export const OverflowSetCustomExample = ({
+export const EdgeActions = ({
 	onDisconnectNode,
 	showModal,
 }: {

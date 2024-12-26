@@ -13,7 +13,6 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss';
 
-import '@pnp/sp/profiles';
 import '@xyflow/react/dist/style.css';
 import './style.css';
 
@@ -21,11 +20,13 @@ import { useBoolean } from '@fluentui/react-hooks';
 import { spfi, SPFx } from '@pnp/sp';
 import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 import '@pnp/sp/site-users/web';
+import { GROUPS } from '../../../constants/permissions';
 import ContextMenu from '../ContextMenu';
 import { getSP } from '../pnpjsConfig';
 import { _edges, _nodes } from '../test';
 import { DiagramDetail, DiagramDetailResponse } from '../types';
 import { edgeTypes } from './edges';
+import { ICustomEdge } from './edges/types';
 import { IHelloWorldProps } from './IHelloWorldProps';
 import DetailModal from './Modal/DetailModal';
 import { nodeTypes } from './nodes';
@@ -56,8 +57,11 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	const [, setUser] = useState<null | ISiteUserInfo>(null);
 	const [diagramDetail, setDiagramDetail] = useState<null | DiagramDetail>(null);
 
+	const [userGroups, setUserGroups] = useState<string[]>([]);
+	const canEdit = userGroups.includes(GROUPS.ADMIN);
+
 	const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>(_nodes as AppNode[]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(_edges as Edge[]);
+	const [edges, setEdges, onEdgesChange] = useEdgesState<ICustomEdge>(_edges as ICustomEdge[]);
 
 	const [menu, setMenu] = useState<IMenu | null>(null);
 	const [showContextMenu, setShowContextMenu] = useState(false);
@@ -71,7 +75,6 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 
 			const el = document.querySelector(`*[data-id="${node.id}"]`);
 			const elementOffset = el?.getBoundingClientRect() as DOMRect;
-			console.log('elementOffset', elementOffset);
 			setMenu({
 				node: node,
 				top: elementOffset?.top,
@@ -115,7 +118,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 
 			setDiagramDetail(_data);
 			setNodes((nodes) => nodes.concat(_data.Nodes as AppNode[]));
-			setEdges((edges) => edges.concat(_data.Edges as Edge[]));
+			setEdges((edges) => edges.concat(_data.Edges as ICustomEdge[]));
 		}
 	};
 
@@ -132,9 +135,17 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 		}
 	};
 
+	const getUserGroups = async () => {
+		const groups = await sp.web.currentUser.groups();
+		setUserGroups(groups.map((item) => item.Title));
+	};
+
 	useEffect(() => {
 		void getWebpartContent();
+		void getUserGroups();
 	}, []);
+
+	console.log('canEdit', canEdit);
 
 	return (
 		<div className={styles['reactFlow-Wrapper']}>
@@ -142,12 +153,13 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 				<DnDProvider>
 					<ReactFlowProviderCustom
 						ref={ref}
-						nodes={nodes}
+						deleteKeyCode={null}
+						nodes={nodes.map<AppNode>((item) => ({ ...item, draggable: canEdit, data: { ...item.data, canEdit } }))}
 						nodeTypes={nodeTypes}
 						onNodesChange={(e) => {
 							onNodesChange(e);
 						}}
-						edges={edges}
+						edges={edges.map<ICustomEdge>((item) => ({ ...item, data: { ...item.data, canEdit } }))}
 						edgeTypes={edgeTypes}
 						defaultEdgeOptions={edgeOptions}
 						onEdgesChange={(e) => {
@@ -166,11 +178,15 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 					>
 						<Background />
 						<MiniMap />
-						<Controls />
 
-						<SidePanel />
+						{canEdit && (
+							<>
+								<Controls />
+								<SidePanel />
+							</>
+						)}
 
-						{showContextMenu && (
+						{canEdit && showContextMenu && (
 							<ContextMenu
 								showModal={showModal}
 								closeContextMenu={() => {
@@ -180,11 +196,13 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 							/>
 						)}
 					</ReactFlowProviderCustom>
-					<Sidebar
-						onSave={() => {
-							void handleSave();
-						}}
-					/>
+					{canEdit && (
+						<Sidebar
+							onSave={() => {
+								void handleSave();
+							}}
+						/>
+					)}
 				</DnDProvider>
 
 				{menu?.node && (

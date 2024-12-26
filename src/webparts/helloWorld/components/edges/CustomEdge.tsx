@@ -1,8 +1,9 @@
 import { useBoolean } from '@fluentui/react-hooks';
-import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, useReactFlow, type EdgeProps } from '@xyflow/react';
+import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, useReactFlow } from '@xyflow/react';
 import React from 'react';
-import { OverflowSetCustomExample } from './EdgeButton';
+import { EdgeActions } from './EdgeButton';
 import EdgeDetailModal from './EdgeDetailModal';
+import { ICustomEdgeProps } from './types';
 
 export type GetSpecialPathParams = {
 	sourceX: number;
@@ -21,8 +22,9 @@ export default ({
 	targetPosition,
 	markerEnd,
 	label,
+	data,
 	...rest
-}: EdgeProps): ReturnType<React.FC> => {
+}: ICustomEdgeProps): ReturnType<React.FC> => {
 	const { setEdges } = useReactFlow();
 	const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
 
@@ -66,12 +68,14 @@ export default ({
 							{label}
 						</p>
 					)}
-					<div className='menu'>
-						<OverflowSetCustomExample
-							onDisconnectNode={onDisconnectNode}
-							showModal={showModal}
-						/>
-					</div>
+					{data?.canEdit && (
+						<div className='menu'>
+							<EdgeActions
+								onDisconnectNode={onDisconnectNode}
+								showModal={showModal}
+							/>
+						</div>
+					)}
 				</div>
 			</EdgeLabelRenderer>
 

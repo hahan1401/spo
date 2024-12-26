@@ -1,10 +1,10 @@
-import type { BuiltInNode, Node } from '@xyflow/react';
-import { NODE_SHAPES } from '../../../../Constants';
+import type { Node } from '@xyflow/react';
+import { NODE_SHAPES } from '../../../../constants/common';
 
 export type NodeShapeType = (typeof NODE_SHAPES)[keyof typeof NODE_SHAPES];
 
 export type CustomNode = Node<
-	{ label: string; onClick?: (id?: string) => void; shape?: NodeShapeType },
+	{ label?: string; onClick?: (id?: string) => void; shape?: NodeShapeType; canEdit?: boolean },
 	'custom-node' | 'labeled-group'
 >;
-export type AppNode = BuiltInNode | CustomNode;
+export type AppNode = CustomNode;

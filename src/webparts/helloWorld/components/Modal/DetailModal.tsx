@@ -1,4 +1,4 @@
-import { ColorPicker, Dropdown, IColorPickerStyles, Modal, PrimaryButton } from '@fluentui/react';
+import { ColorPicker, Dropdown, IColorPickerStyles, IDropdownOption, Modal, PrimaryButton } from '@fluentui/react';
 import { useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import {
@@ -9,7 +9,7 @@ import {
 	NODE_MIN_HEIGHT,
 	NODE_SHAPES,
 	VERTICAL_NODE_GAP,
-} from '../../../../Constants';
+} from '../../../../constants/common';
 import { NODE_TYPE } from '../../../../types/common';
 import { capitalizeFirstLetter, hashString } from '../../../../Utils';
 import { AppNode, CustomNode, NodeShapeType } from '../nodes/types';
@@ -34,7 +34,7 @@ const colorPickerStyles: Partial<IColorPickerStyles> = {
 const getNodeGroupOptions = (nodes: AppNode[]) =>
 	nodes
 		.filter((item) => item.type === NODE_TYPE.LABELED_GROUP)
-		.map((item) => ({ key: item.id, text: item.data.label }));
+		.map<IDropdownOption>((item) => ({ key: item.id, text: item.data.label ?? '' }));
 
 const DetailModal = ({
 	node,

@@ -24,10 +24,12 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 					...(hasShape && parentNode ? { backgroundColor: parentNode.style?.backgroundColor ?? 'inherit' } : {}),
 				}}
 			>
-				<RF.NodeResizer
-					minWidth={100}
-					minHeight={30}
-				/>
+				{data.canEdit && (
+					<RF.NodeResizer
+						minWidth={100}
+						minHeight={30}
+					/>
+				)}
 				<div
 					className={`react-flow__node-custom-content ${data?.shape ? `react-flow__node-shape-${data.shape}` : ''}`}
 					style={{
@@ -54,21 +56,25 @@ export const CustomNode = ({ data, id, parentId, type }: RF.NodeProps<TCustomNod
 				</div>
 
 				<Handle
+					isConnectable={data.canEdit}
 					type='target'
 					position={RF.Position.Top}
 					id={`-top_${id}`}
 				/>
 				<Handle
+					isConnectable={data.canEdit}
 					type='source'
 					position={RF.Position.Right}
 					id={`-right_${id}`}
 				/>
 				<Handle
+					isConnectable={data.canEdit}
 					type='source'
 					position={RF.Position.Bottom}
 					id={`-bottom_${id}`}
 				/>
 				<Handle
+					isConnectable={data.canEdit}
 					type='target'
 					position={RF.Position.Left}
 					id={`-left_${id}`}
