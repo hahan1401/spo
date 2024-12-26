@@ -22,7 +22,6 @@ import { spfi, SPFx } from '@pnp/sp';
 import '@pnp/sp/files';
 import { IFileInfo } from '@pnp/sp/files';
 import { folderFromServerRelativePath } from '@pnp/sp/folders';
-import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 import '@pnp/sp/site-users/web';
 import { GROUPS } from '../../../constants/permissions';
 import ContextMenu from '../ContextMenu';
@@ -57,7 +56,7 @@ const edgeOptions = {
 } as Edge;
 
 const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
-	const [, setUser] = useState<null | ISiteUserInfo>(null);
+	const currentPageUrl = context.pageContext.legacyPageContext.serverRequestPath;
 	const [diagramDetail, setDiagramDetail] = useState<null | DiagramDetail>(null);
 	const [files, setFiles] = useState<IFileInfo[]>([]);
 
@@ -103,10 +102,11 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	}, []);
 
 	const getWebpartContent = async () => {
-		const user = await sp.web.currentUser();
-		setUser(user);
-
-		const diagramDetail = (await spCache.web.lists.getByTitle('WorkFlowDiagrams').items()) as DiagramDetailResponse[];
+		const diagramDetail = (await spCache.web.lists
+			.getByTitle('WorkFlowDiagrams')
+			.items.filter<DiagramDetailResponse>((item) =>
+				item.text('PageUrl').equals(currentPageUrl),
+			)()) as DiagramDetailResponse[];
 
 		if (diagramDetail[0]) {
 			const data = diagramDetail[0];
@@ -149,6 +149,7 @@ const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
 	};
 
 	useEffect(() => {
+		console.log('context', context);
 		void getWebpartContent();
 		void getUserGroups();
 		void getFiles();

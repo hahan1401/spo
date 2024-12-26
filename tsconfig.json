@@ -25,6 +25,7 @@
       "webpack-env"
     ],
   },
+  "files": ["declarations.d.ts"],
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx"

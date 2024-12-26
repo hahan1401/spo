@@ -10,15 +10,10 @@ export interface DiagramDetailResponse {
 	Modified: string;
 	Created: string;
 	AuthorId: number;
+	PageUrl: string;
 }
 
-export interface DiagramDetail {
-	Id: number;
-	Title: any;
+export interface DiagramDetail extends Omit<DiagramDetailResponse, 'Nodes' | 'Edges'> {
 	Nodes?: AppNode[];
 	Edges?: Edge[];
-	ID: number;
-	Modified: string;
-	Created: string;
-	AuthorId: number;
 }
