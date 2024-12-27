@@ -56,7 +56,7 @@ const edgeOptions = {
 } as Edge;
 
 const HelloWorld: React.FC<IHelloWorldProps> = ({ context }) => {
-	const currentPageUrl = context.pageContext.legacyPageContext.serverRequestPath;
+	const currentPageUrl = context.pageContext.web.serverRelativeUrl;
 	const [diagramDetail, setDiagramDetail] = useState<null | DiagramDetail>(null);
 	const [files, setFiles] = useState<IFileInfo[]>([]);
 
